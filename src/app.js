@@ -675,7 +675,7 @@ window.addEventListener('keydown', e => { if (e.key === 'Escape') showView('crea
 
 $('btnExport').onclick = e => { e.stopPropagation(); $('exportMenu').classList.toggle('open'); };
 document.addEventListener('click', e => { if (!e.target.closest('#exportMenu')) $('exportMenu').classList.remove('open'); });
-if (!document.fullscreenEnabled) $('btnFull').style.display = 'none';
+if (!document.fullscreenEnabled) { $('btnFull').style.display = 'none'; $('stage').classList.add('no-fs'); }
 $('btnFull').onclick = () => { if (document.fullscreenElement) document.exitFullscreen(); else $('stage').requestFullscreen(); };
 $('hudPause').onclick = () => $('btnRun').click();
 

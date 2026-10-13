@@ -339,15 +339,21 @@
     .side-scroll { overflow: visible; padding: 0 20px 26px; }
     .logo, .side-foot { padding-left: 20px; padding-right: 20px; }
     .stage { height: 78vh; min-height: 460px; }
-    .stage-canvas { inset: 72px 16px 104px; }
-    .hud { width: calc(100% - 32px); bottom: 30px; gap: 12px; padding: 0 16px 0 8px; }
-    .corner { display: none; }
+    /* status gets its own row under the nav, so it never sits on the picture */
+    .stage-canvas { inset: 98px 16px 104px; }
+    /* the progress bar shares the bottom row with the save (and fullscreen) buttons */
+    .hud { left: 16px; transform: none; width: calc(100% - 128px); bottom: 30px; gap: 12px; padding: 0 16px 0 8px; }
+    .stage.no-fs .hud { width: calc(100% - 82px); }
+    html:not(.landed) .app .hud { transform: translateY(16px); }
+    .corner { bottom: 34px; width: 40px; height: 40px; border: 1px solid var(--line-2); background: var(--hud); }
+    #btnExport { right: 16px; } #btnFull { right: 62px; }
+    .menu { right: 16px; bottom: 84px; width: min(252px, calc(100% - 32px)); }
     .sheet { padding: 92px 22px 40px; }
     .sheet h3 { font-size: 34px; }
     .cards { grid-template-columns: 1fr; }
     .topnav { gap: 18px; padding: 24px 128px 0 0; }
     .topnav .nav { font-size: 12.5px; }
-    .status { top: 74px; left: 18px; max-width: 70%; }
+    .status { top: 70px; left: 18px; right: 18px; max-width: none; }
     html.entered .glass-toggle { position: absolute; }
     .glass-toggle { right: 6px; top: 8px; }
     .chapter { left: 18px; } .skip { right: 18px; }

@@ -9,15 +9,15 @@ const out = resolve(process.argv[3] || '/tmp/ts-shots');
 mkdirSync(out, { recursive: true });
 const url = 'file://' + resolve('dist/index.html');
 const theme = process.env.THEME || 'dark';
-const mobile = scenario === 'mobile';
+const mobile = scenario === 'mobile' || scenario === 'phone';
 
 const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
-const ctx = await browser.newContext({ viewport: mobile ? { width: 390, height: 844 } : { width: 1440, height: 900 }, deviceScaleFactor: mobile ? 2 : 1, colorScheme: theme });
+const ctx = await browser.newContext({ viewport: mobile ? { width: +(process.env.W || 390), height: +(process.env.H || 844) } : { width: 1440, height: 900 }, deviceScaleFactor: mobile ? 2 : 1, colorScheme: theme });
 const page = await ctx.newPage();
 const errors = [];
 page.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') errors.push(`[${m.type()}] ${m.text()}`); });
 page.on('pageerror', e => errors.push('[pageerror] ' + e.message));
-await page.goto(url + (scenario === 'studio' || scenario === 'clear' || scenario === 'toggle' || scenario === 'big' || scenario === 'upload' ? '#studio' : ''));
+await page.goto(url + (scenario === 'studio' || scenario === 'clear' || scenario === 'toggle' || scenario === 'big' || scenario === 'upload' || scenario === 'phone' ? '#studio' : ''));
 await page.waitForTimeout(1500);
 const snap = async name => { await page.screenshot({ path: `${out}/${scenario}-${name}.png` }); };
 
@@ -90,6 +90,21 @@ if (scenario === 'intro' || scenario === 'mobile') {
   await page.setInputFiles('#file', { name: 'notes.txt', mimeType: 'text/plain', buffer: Buffer.from('hi') });
   await page.waitForTimeout(500);
   console.log('after txt:', await page.textContent('#s_msg'), '| dialogs fired:', dialogs);
+} else if (scenario === 'phone') {
+  // a tall portrait upload, like a phone photo, then the save menu
+  await page.evaluate(() => new Promise(res => {
+    const c = document.createElement('canvas'); c.width = 973; c.height = 1400; const x = c.getContext('2d');
+    const g = x.createLinearGradient(0, 0, 0, 1400); g.addColorStop(0, '#c98a4b'); g.addColorStop(1, '#3a6b2a'); x.fillStyle = g; x.fillRect(0, 0, 973, 1400);
+    x.fillStyle = '#e8c4a8'; x.beginPath(); x.arc(486, 560, 260, 0, 7); x.fill();
+    c.toBlob(b => { const dt = new DataTransfer(); dt.items.add(new File([b], 'IMG_0658.png', { type: 'image/png' })); const f = document.getElementById('file'); f.files = dt.files; f.dispatchEvent(new Event('change')); setTimeout(res, 1200); });
+  }));
+  await page.click('#btnRun'); await page.waitForTimeout(4000); await snap('portrait');
+  const box = id => page.evaluate(id => { const r = document.getElementById(id).getBoundingClientRect(); return { l: Math.round(r.left), t: Math.round(r.top), r: Math.round(r.right), b: Math.round(r.bottom), shown: getComputedStyle(document.getElementById(id)).display !== 'none' }; }, id);
+  const st = await box('s_msg'), vw = await box('view'), ex = await box('btnExport'), hud = await box('hud'), fs = await box('btnFull');
+  console.log('status', JSON.stringify(st), 'canvas', JSON.stringify(vw), 'overlap:', st.b > vw.t);
+  console.log('save button', JSON.stringify(ex), 'fullscreen', JSON.stringify(fs), 'hud', JSON.stringify(hud), 'hud hits buttons:', hud.r > Math.min(ex.l, fs.shown ? fs.l : 1e9));
+  await page.click('#btnExport'); await page.waitForTimeout(600); await snap('menu');
+  const mn = await box('exportMenu'); console.log('menu', JSON.stringify(mn), 'inside screen:', mn.l >= 0 && mn.r <= page.viewportSize().width);
 } else if (scenario === 'toggle') {
   const box = await page.locator('#themeToggle').boundingBox();
   const clip = { x: box.x - 4, y: box.y - 4, width: box.width + 8, height: box.height + 8 };
