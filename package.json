@@ -1,0 +1,14 @@
+{
+  "name": "typographic-sediment",
+  "version": "1.0.0",
+  "description": "Pictures made of letters that fall, collide and settle.",
+  "scripts": {
+    "site": "python3 build.py",
+    "shots": "node tools/shot.mjs"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "playwright-core": "^1.64.0"
+  },
+  "private": true
+}

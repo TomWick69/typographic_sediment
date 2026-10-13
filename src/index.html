@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0b0b0c">
+<title>Typographic Sediment</title>
+<meta name="description" content="Pictures made of letters that fall, collide and settle. A small physics engine that rebuilds any image from text, right in your browser.">
+<meta property="og:title" content="Typographic Sediment">
+<meta property="og:description" content="Pictures made of letters that fall, collide and settle.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0b0c'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='700' font-size='19' text-anchor='middle' fill='%23ead6c3'%3ET%3C/text%3E%3C/svg%3E">
+<script>
+  // pick the theme before anything paints
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('ts-theme'); } catch (e) {}
+    if (t !== 'light' && t !== 'dark') t = (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    document.documentElement.dataset.theme = t;
+    var skip = /[#&]studio\b/.test(location.hash) || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if (skip) document.documentElement.classList.add('entered', 'landed');
+  })();
+</script>
+<style>
+/*FONTS*/
+/*STYLE*/
+</style>
+</head>
+<body>
+
+<!-- ============================ preface: the book ============================ -->
+<div class="scroller" id="scroller" aria-hidden="true"></div>
+<section class="intro" id="intro" aria-label="Preface">
+  <div class="lamp"></div>
+  <div class="cam" id="cam">
+    <div class="book-wrap" id="bookWrap">
+      <div class="book" id="book">
+        <!-- the solid part of the book: shadow on the table, back board, page edges, spine -->
+        <div class="b3 table-shadow" aria-hidden="true"></div>
+        <div class="b3 board" aria-hidden="true"></div>
+        <div class="b3 edge fore" aria-hidden="true"></div>
+        <div class="b3 edge top" aria-hidden="true"></div>
+        <div class="b3 edge bottom" aria-hidden="true"></div>
+        <div class="b3 spine" aria-hidden="true"></div>
+
+        <!-- the page the camera lands on -->
+        <article class="page recto" id="pageCh">
+          <header class="rhead"><span>I &nbsp;·&nbsp; The Settling</span><span>7</span></header>
+          <div class="chap">
+            <span class="chap-n">I.</span>
+            <h2 class="chap-t">The Settling</h2>
+          </div>
+          <p class="epi" id="epi">All that we see or seem<br>Is but a dream within a dream.</p>
+          <p class="epi-by">E. A. Poe</p>
+          <figure class="plate">
+            <div class="plate-frame" id="plateFrame"><canvas id="plate" width="800" height="600"></canvas></div>
+            <figcaption><i>Plate I.</i> A sunset, set in letters.</figcaption>
+          </figure>
+        </article>
+
+        <!-- title leaf: title page on the front, colophon on the back -->
+        <div class="leaf" id="leafTitle">
+          <div class="face front page">
+            <div class="tp">
+              <p class="tp-kicker">A field guide to falling letters</p>
+              <h1 class="tp-title">Typographic<br><em>Sediment</em></h1>
+              <p class="tp-sub">being an engine in which letters fall,<br>collide &amp; settle into pictures</p>
+              <p class="tp-orn" aria-hidden="true">⁂</p>
+              <p class="tp-imp">Printed in your browser<br>MMXXVI</p>
+            </div>
+          </div>
+          <div class="face back page">
+            <div class="colo">
+              <p class="colo-h">Colophon</p>
+              <p>Every picture in this book was made one letter at a time. Each one is aimed, coloured, dropped and allowed to settle, and kept only if it helped.</p>
+              <p>No AI was involved. Just a bit of physics and a lot of patience.</p>
+              <p class="colo-set">Set in Figtree.</p>
+            </div>
+            <span class="folio-l">6</span>
+          </div>
+        </div>
+
+        <!-- cover: cloth outside, sediment endpaper inside -->
+        <div class="leaf cover" id="cover">
+          <div class="face front">
+            <div class="cv">
+              <p class="cv-kicker">Vol. I</p>
+              <h1 class="cv-title">Typographic<br><em>Sediment</em></h1>
+              <svg class="cv-mark" viewBox="0 0 120 64" aria-hidden="true">
+                <g font-family="Figtree, sans-serif" font-weight="600" font-size="15" fill="currentColor">
+                  <text x="45" y="12" transform="rotate(-14 49 8)">a</text>
+                  <text x="64" y="22" transform="rotate(22 68 18)">e</text>
+                  <text x="30" y="34" transform="rotate(8 34 30)">s</text>
+                  <text x="52" y="38" transform="rotate(-30 56 34)">d</text>
+                  <text x="74" y="40" transform="rotate(12 78 36)">r</text>
+                  <text x="18" y="56" transform="rotate(-6 22 52)">m</text>
+                  <text x="38" y="58" transform="rotate(4 42 54)">i</text>
+                  <text x="48" y="58" transform="rotate(-8 52 54)">n</text>
+                  <text x="63" y="58" transform="rotate(2 67 54)">t</text>
+                  <text x="74" y="58" transform="rotate(-3 78 54)">o</text>
+                  <text x="88" y="57" transform="rotate(18 92 53)">y</text>
+                </g>
+                <path d="M6 62.5h108" stroke="currentColor" stroke-width=".6"/>
+              </svg>
+              <p class="cv-foot">A field guide to falling letters</p>
+            </div>
+          </div>
+          <div class="face back"><canvas id="endpaper"></canvas></div>
+          <i class="ce ce-f" aria-hidden="true"></i><i class="ce ce-t" aria-hidden="true"></i><i class="ce ce-b" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="intro-ui">
+    <div class="cue" id="cue"><span>Scroll to open</span><i></i></div>
+    <div class="chapter" id="chapter"><span class="chapter-bar"><i id="chapterFill"></i></span><span id="chapterName">Cover</span></div>
+    <button class="skip" id="btnSkip">Skip to the studio <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13m0 0l-5-5m5 5l-5 5"/></svg></button>
+  </div>
+</section>
+
+<!-- ============================ the liquid-glass theme switch ============================ -->
+<button class="glass-toggle" id="themeToggle" role="switch" aria-checked="true" aria-label="Dark mode">
+  <canvas id="glassCanvas"></canvas>
+</button>
+
+<!-- ============================ studio ============================ -->
+<div class="app" id="app">
+  <aside class="side">
+    <button class="logo" id="btnBook" title="Back to the book">
+      <span>Typographic</span><em>Sediment</em>
+    </button>
+    <div class="side-scroll">
+
+      <section class="sec"><span class="num">01</span><div>
+        <h2>Image</h2>
+        <div class="upload">
+          <canvas id="thumb" width="10" height="10"></canvas>
+          <button class="x" id="btnClear" title="Back to the sample" aria-label="Back to the sample"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+          <button class="upl-btn" id="btnLoad"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4m0 0L8 8m4-4l4 4M5 14v4a2 2 0 002 2h10a2 2 0 002-2v-4"/></svg>Upload or drop an image</button>
+          <input type="file" id="file" accept="image/*" hidden>
+        </div>
+        <p class="samples">or a sample:
+          <button data-sample="sunset">Sunset</button><button data-sample="moon">Moon</button><button data-sample="waves">Waves</button>
+        </p>
+      </div></section>
+
+      <section class="sec"><span class="num">02</span><div>
+        <h2>Text</h2>
+        <textarea id="text" spellcheck="false" rows="3">All that we see or seem
+Is but a dream within a dream.</textarea>
+        <div class="textmeta"><span id="charCount">0 characters</span>
+          <button id="btnShuffle" title="Shuffle the words" aria-label="Shuffle the words"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h3.2c1.9 0 3 1 4 2.6l2.2 3.3c1 1.5 2.1 2.6 4 2.6H21m0 0l-3-3m3 3l-3 3M3 17h3.2c1.2 0 2-.4 2.7-1.1M14 8.1c.7-.7 1.5-1.1 2.6-1.1H21m0 0l-3-3m3 3l-3 3"/></svg></button></div>
+      </div></section>
+
+      <section class="sec"><span class="num">03</span><div>
+        <h2>Style</h2>
+        <div class="field"><span class="lab">Typeface <span class="pick-name" data-name-for="font"></span></span>
+          <div class="pick faces" data-for="font" role="radiogroup" aria-label="Typeface">
+            <button data-v="didone" title="Didone" style="font-family:'Playfair Display','Bodoni MT',Didot,'Bodoni 72',Georgia,serif">Ag</button>
+            <button data-v="serif" title="Serif" style="font-family:Georgia,'Times New Roman',serif">Ag</button>
+            <button data-v="sans" title="Sans" style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif">Ag</button>
+            <button data-v="mono" title="Typewriter" style="font-family:'Courier New',Courier,monospace">Ag</button>
+            <button data-v="heavy" title="Display" style="font-family:Impact,'Arial Black',sans-serif">Ag</button>
+          </div>
+        </div>
+        <div class="field"><span class="lab">Ground <span class="pick-name" data-name-for="bg"></span></span>
+          <div class="pick swatches" data-for="bg" role="radiogroup" aria-label="Background">
+            <button data-v="black" title="Dark" style="--sw:#0a0a0b"></button>
+            <button data-v="white" title="Light" style="--sw:#fbfbf8"></button>
+            <button data-v="paper" title="Paper" style="--sw:#eee5cf"></button>
+            <button data-v="avg" title="Average colour" class="sw-avg"></button>
+            <button data-v="soft" title="Faint ghost" class="sw-soft"></button>
+            <button data-v="clear" title="Transparent" class="sw-clear"></button>
+          </div>
+        </div>
+        <div class="field"><span class="lab">Colour</span>
+          <div class="pick seg" data-for="cmode" role="radiogroup" aria-label="Colour mode">
+            <button data-v="0" title="Image colours">Image</button><button data-v="1" title="Grayscale">Grey</button><button data-v="2" title="Warm tone">Warm</button>
+          </div>
+        </div>
+        <select id="font" class="proxy" tabindex="-1" aria-hidden="true">
+          <option value="didone" selected>Didone</option><option value="serif">Serif</option><option value="sans">Sans</option><option value="mono">Typewriter</option><option value="heavy">Display</option></select>
+        <select id="bg" class="proxy" tabindex="-1" aria-hidden="true">
+          <option value="black" selected>Dark</option><option value="white">Light</option><option value="paper">Paper</option><option value="avg">Average colour</option><option value="soft">Faint ghost</option><option value="clear">Transparent</option></select>
+        <select id="cmode" class="proxy" tabindex="-1" aria-hidden="true">
+          <option value="0" selected>Image colours</option><option value="1">Grayscale</option><option value="2">Warm tone</option></select>
+      </div></section>
+
+      <section class="sec"><span class="num">04</span><div>
+        <h2>Physics</h2>
+        <label class="sl"><span>Chaos</span><input type="range" id="chaos" min="0" max="100" value="35"><output id="o_chaos"></output></label>
+        <label class="sl"><span>Strictness</span><input type="range" id="strict" min="0" max="100" value="30"><output id="o_strict"></output></label>
+        <label class="sl"><span>Letter size</span><input type="range" id="maxS" min="0" max="100" value="35"><output id="o_max"></output></label>
+        <label class="sl"><span>Overlap</span><input type="range" id="overlap" min="0" max="100" value="0"><output id="o_ov"></output></label>
+
+        <details class="more"><summary>More settings</summary>
+          <div class="more-in">
+            <label class="fld"><span class="top"><span>Smallest letter</span><output id="o_min"></output></span><input type="range" id="minS" min="4" max="24" value="7"></label>
+            <label class="fld"><span class="top"><span>Placement precision</span><output id="o_tries"></output></span><input type="range" id="tries" min="1" max="40" value="14"></label>
+            <label class="fld"><span class="top"><span>Stop below difference</span><output id="o_stop"></output></span><input type="range" id="stopErr" min="0" max="20" value="5"></label>
+            <label class="fld"><span class="top"><span>Stop after letters</span><output id="o_cap"></output></span><input type="range" id="cap" min="200" max="50000" step="100" value="6000"></label>
+            <label class="fld"><span class="top"><span>Falling letters on screen</span><output id="o_speed"></output></span><input type="range" id="speed" min="0" max="7" value="4"></label>
+            <label class="rowf"><span>Canvas size</span><select class="sel" id="res">
+              <option value="480">480 px</option><option value="640">640 px</option><option value="800" selected>800 px</option><option value="1000">1000 px</option><option value="1400">1400 px</option><option value="2048">2K · 2048 px</option><option value="3840">4K · 3840 px</option></select></label>
+            <label class="rowf"><span>Workers</span><select class="sel" id="workers"></select></label>
+            <p class="hint">Chaos is how wildly letters are thrown in. Strictness is how much a letter must improve the picture to be kept. Overlap lets letters sit partly on top of each other. Canvas size and workers restart the picture. 2K and 4K need far more letters to fill, so raise the letter limit with them. They also switch to instant placement, which is about five times faster.</p>
+          </div>
+        </details>
+      </div></section>
+    </div>
+
+    <div class="side-foot">
+      <button class="gen" id="btnRun" disabled><span class="disc"><svg class="ic-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg><svg class="ic-pause" viewBox="0 0 24 24"><path d="M7.5 5h3.2v14H7.5zM13.3 5h3.2v14h-3.2z"/></svg></span><span class="gen-t"><span id="genLabel">Generate</span><kbd>space</kbd></span></button>
+      <button class="reset" id="btnReset"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 11-2.6-5.9M20 4v4.5h-4.5"/></svg>Reset</button>
+    </div>
+  </aside>
+
+  <main class="stage" id="stage">
+    <div class="status" id="s_msg">starting</div>
+    <nav class="topnav" aria-label="Sections">
+      <button class="nav" data-view="create" aria-current="page">Studio</button>
+      <button class="nav" data-view="explore">Presets</button>
+      <button class="nav" data-view="about">Colophon</button>
+    </nav>
+
+    <div class="stage-canvas" id="stageCanvas">
+      <figure class="art">
+        <canvas id="view" width="800" height="600"></canvas>
+        <figcaption><span id="capName"><i>Plate I.</i> Sunset</span><span id="capDims">800 × 600</span></figcaption>
+      </figure>
+    </div>
+
+    <div class="hud" id="hud">
+      <button class="pp" id="hudPause" disabled aria-label="Pause or resume"><svg class="ic-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg><svg class="ic-pause" viewBox="0 0 24 24"><path d="M7.5 5h3.2v14H7.5zM13.3 5h3.2v14h-3.2z"/></svg></button>
+      <div class="track"><i id="hudFill"></i></div>
+      <span class="pct" id="hudPct">0%</span><span class="sep"></span><span class="placed" id="hudPlaced">0 placed</span>
+    </div>
+    <button class="corner" id="btnExport" title="Save and time-lapse" aria-label="Save and time-lapse"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14"/></svg></button>
+    <button class="corner" id="btnFull" title="Full screen" aria-label="Full screen"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg></button>
+
+    <div class="menu" id="exportMenu">
+      <h3>Save</h3>
+      <label class="fld" style="margin:0"><span class="top"><span>Time-lapse length</span><output id="o_dur"></output></span><input type="range" id="dur" min="5" max="90" value="20"></label>
+      <div class="btns">
+        <button class="btn" id="btnReplay">Replay</button><button class="btn" id="btnRecord">Save video</button>
+        <button class="btn" id="btnPng">Save PNG</button><button class="btn" id="btnSvg">Save SVG</button>
+      </div>
+    </div>
+
+    <section class="sheet" id="sheet-explore" aria-label="Presets">
+      <div class="sheet-in">
+        <p class="sheet-k">Presets</p>
+        <h3>Four ways for letters to <em>fall</em></h3>
+        <p>Each one sets the physics and starts the picture again.</p>
+        <div class="cards">
+          <button class="card" data-preset="portrait"><span class="card-n">01</span><strong>Dense portrait</strong><span>Small, precise letters that pack tightly. Best for faces.</span></button>
+          <button class="card" data-preset="rain"><span class="card-n">02</span><strong>Falling rain</strong><span>Loose, chaotic letters that tumble in from every direction.</span></button>
+          <button class="card" data-preset="large"><span class="card-n">03</span><strong>Large type</strong><span>Big letters with a high bar for keeping them. Bold and graphic.</span></button>
+          <button class="card" data-preset="paint"><span class="card-n">04</span><strong>Painterly</strong><span>Letters may overlap, so gaps fill in and the image stays faithful.</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet" id="sheet-about" aria-label="Colophon">
+      <div class="sheet-in">
+        <p class="sheet-k">Colophon</p>
+        <h3>Letters that <em>fall</em> into place</h3>
+        <p>This started with a simple question: what does a picture look like if you build it the slow way, one letter at a time?</p>
+        <p>Each letter is aimed at the part of the image that's furthest off, given the colour that fits best, then thrown in and left to tumble and settle. If it makes the picture better, it stays. If not, it's thrown out. A few thousand letters later, the image shows up.</p>
+        <p>There's no AI in here, only geometry and arithmetic running in your browser. Your image never leaves the page.</p>
+        <p>One tip: pick the checkered ground to get letters on a transparent background. A cut-out PNG works especially well.</p>
+        <button class="link" id="btnPreface">Read the preface again <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13m0 0l-5-5m5 5l-5 5"/></svg></button>
+      </div>
+    </section>
+
+    <div id="ticker"></div>
+  </main>
+</div>
+
+<script type="text/plain" id="matter-src">
+/*MATTER*/
+</script>
+<script>
+/*ENGINE*/
+/*APP*/
+</script>
+<script>
+/*GLASS*/
+</script>
+<script>
+/*INTRO*/
+</script>
+</body>
+</html>
